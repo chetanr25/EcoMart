@@ -1,31 +1,21 @@
-import React from "react";
+import { React, useState } from "react";
 import PropTypes from "prop-types";
 import styles from "./SustainabilityAnalysis.module.css"; // Import the CSS module
 import SustainabilityLoading from "./SustainabilityLoading";
 
 const SustainabilityAnalysis = ({ analysis }) => {
-  const [isLoading, setIsLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000); // Increased time to show loading state
-  }, []);
-
-  if (isLoading) {
-    return <SustainabilityLoading />;
-  }
+  const [isLoading, setIsLoading] = useState(false);
 
   const getColor = (percentage) => {
-    if (percentage < 50) return styles.red; // Use styles from the module
-    if (percentage < 75) return styles.orange; // Use styles from the module
-    return styles.green; // Use styles from the module
+    if (percentage < 50) return styles.red;
+    if (percentage < 75) return styles.orange;
+    return styles.green;
   };
 
   const getEmoji = (percentage) => {
-    if (percentage < 50) return "😟";
-    if (percentage < 75) return "🙂";
-    return "🌟";
+    if (percentage < 50) return "😔";
+    if (percentage < 75) return "✨";
+    return "⭐";
   };
 
   const getParameterIcon = (key) => {
