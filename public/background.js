@@ -18,3 +18,9 @@ chrome.runtime.onInstalled.addListener(() => {
     ]);
   });
 });
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === "complete" && tab.url.includes("amazon.com")) {
+    chrome.action.show(tabId); // Show the extension
+  }
+});

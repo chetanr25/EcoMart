@@ -3,47 +3,28 @@ import { useEffect, useState } from "react";
 
 export default function App({ Component, pageProps }) {
   const [pageTitle, setPageTitle] = useState("");
-
+  const [pageDescription, setPageDescription] = useState("");
   useEffect(() => {
     const getCurrentTab = async () => {
       try {
-        chrome.tabs.query(
-          { active: true, currentWindow: true },
-          function (tabs) {
-            const tab = tabs[0];
-            setPageTitle(tab.title);
-            // document.getElementById("title").textContent = tab.title;
-          }
-        );
-        // let [tab] = await chrome.tabs.query({
-        //   active: true,
-        //   currentWindow: true,
-        // });
-        // setPageTitle(tab);
+        // Using chrome.tabs.query with Promise syntax for better error handling
+        const tabs = await chrome.tabs.query({
+          active: true,
+          currentWindow: true,
+        });
 
-        // const title = await chrome.scripting.executeScript({
-        //   target: { tabId: tab.id },
-        //   func: () => document.title,
-        // });
-        // console.log(title);
-        // setPageTitle(title);
-        // chrome.scripting.executeScript(
-        //   {
-        //     target: { tabId: tab.id },
-        //     function: () => {
-        //       return document.title;
-        //     },
-        //   },
-        //   (results) => {
-        //     if (results && results[0]?.result) {
-        //       console.log(results[0].result);
-        //       setPageTitle(results[0].result);
-        //     }
-        //   }
-        // );
+        if (tabs && tabs[0]) {
+          const tab = tabs[0];
+          setPageTitle(tab.title || tab.url);
+          setPageDescription(
+            document.querySelector("meta[name='description']")?.textContent
+          );
+        } else {
+          setPageTitle("No active tab found");
+        }
       } catch (error) {
         console.error("Error:", error);
-        setPageTitle(`Error getting page title: ${error}`);
+        setPageTitle(`Error: ${error.message}`);
       }
     };
 
@@ -51,10 +32,11 @@ export default function App({ Component, pageProps }) {
   }, []);
 
   return (
-    <div className="min-w-[400px] min-h-[300px] p-6 bg-white">
-      <div className="space-y-4">
-        <h1 className="text-xl font-bold border-b pb-2">Current Page Title</h1>
-        <p className="text-gray-600 break-words">{pageTitle}</p>
+    <div className="">
+      <div className="">
+        <h1 className="">{pageTitle}</h1>
+        <br />
+        <p className="">{pageDescription}</p>
       </div>
     </div>
   );
