@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { analyseProduct } from "../utils/geminiService";
 import SustainabilityAnalysis from "../components/SustainabilityAnalysis";
 import SustainabilityLoading from "../components/SustainabilityLoading";
+import styles from "../components/UnsupportedSite.module.css";
 
 const LoadingState = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -21,12 +22,22 @@ export default function App({ Component, pageProps }) {
   const [error, setError] = useState(null);
   const [generatedContent, setGeneratedContent] = useState(null);
 
+  const SUPPORTED_SITES = [
+    "amazon.com",
+    "amazon.in",
+    "flipkart.com",
+    "myntra.com",
+    "ajio.com",
+  ];
+
+  const isSupportedSite = (url) => {
+    return SUPPORTED_SITES.some((site) => url.includes(site));
+  };
+
   useEffect(() => {
     const getCurrentTab = async () => {
       try {
         setLoading(true);
-        // setPageTitle("Macbook Pro");
-        // setPageDescription("Macbook Pro");
         const tabs = await chrome.tabs.query({
           active: true,
           currentWindow: true,
@@ -35,62 +46,21 @@ export default function App({ Component, pageProps }) {
         if (tabs && tabs[0]) {
           const tab = tabs[0];
           setPageTitle(tab.title || tab.url);
-          // setPageDescription(
-          //   document.querySelector("meta[name='description']")?.content
-          // );
-          const productData = {
-            title: tab.title,
-          };
-          const result = await analyseProduct(productData);
-          // console.log(result);
-          setGeneratedContent(result);
-          setLoading(false);
+
+          if (isSupportedSite(tab.url)) {
+            const productData = {
+              title: tab.title,
+              url: tab.url,
+            };
+            const result = await analyseProduct(productData);
+            setGeneratedContent(result);
+          } else {
+            setError("unsupported");
+          }
         } else {
           setPageTitle("No active tab found");
+          setError("notab");
         }
-        //   } catch (error) {
-        //     console.error("Error:", error);
-        //     setPageTitle(`Error: ${error.message}`);
-        //   }
-        // };
-        // Check if we're in a Chrome extension context
-        // if (typeof chrome !== 'undefined' && chrome.tabs) {
-        //   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-        //   // if (tab) {
-        //     setPageTitle(tab[0].title || "Unknown Product");
-        //     setPageDescription(tab[0].description || "Unknown Product");
-        //     const productData = {
-        //       title: tab[0].title,
-        //       description: tab[0].description,
-        //       url: tab[0].url
-        //     };
-        //     const result = await analyseProduct(productData);
-        //     console.log(result);
-        //     setGeneratedContent(result);
-        //   // }
-        //     // Only analyze if it's an Amazon product page
-        //     // if (tab[0].url.includes('amazon.com')) {
-        //     //   const productData = {
-        //     //     title: tab[0].title,
-        //     //     description: tab[0].description,
-        //     //     url: tab[0].url
-        //     //   };
-
-        //       // const result = await analyseProduct(productData);
-        //       // setAnalysis(result);
-        //     // }
-        //   // }
-        // } else {
-        //   // Fallback for development/testing
-        //   setPageTitle("Development Mode");
-        //   const testProduct = {
-        //     title: "Test Product",
-        //     description: "Test Description"
-        //   };
-        //   const result = await analyseProduct(testProduct);
-        //   setAnalysis(result);
-        // }
       } catch (error) {
         console.error("Error:", error);
         setError(error.message);
@@ -102,56 +72,56 @@ export default function App({ Component, pageProps }) {
     getCurrentTab();
   }, []);
 
-  // const renderAnalysisResults = (analysis) => {
-  //   if (!analysis) return null;
-
-  //   return (
-  //     <div className="analysis-results">
-  //       <h2 className="text-xl font-bold mb-4">Sustainability Analysis</h2>
-
-  //       {/* Overall Score */}
-  //       <div className="mb-6">
-  //         <h3 className="font-semibold">Overall Sustainability Score</h3>
-  //         <div className="text-3xl font-bold text-green-600">
-  //           {analysis.sustainabilityScore.score}/100
-  //         </div>
-  //       </div>
-
-  //       {/* Carbon Footprint */}
-  //       <div className="mb-4">
-  //         <h3 className="font-semibold">Carbon Footprint</h3>
-  //         <p>{analysis.carbonFootprint.value} {analysis.carbonFootprint.unit}</p>
-  //         <p className="text-sm text-gray-600">{analysis.carbonFootprint.details}</p>
-  //       </div>
-
-  //       {/* Water Usage */}
-  //       <div className="mb-4">
-  //         <h3 className="font-semibold">Water Usage</h3>
-  //         <p>{analysis.waterUsage.value} {analysis.waterUsage.unit}</p>
-  //         <p className="text-sm text-gray-600">{analysis.waterUsage.details}</p>
-  //       </div>
-
-  //       {/* Add other parameters similarly */}
-
-  //       {/* Improvements */}
-  //       <div className="mt-6">
-  //         <h3 className="font-semibold">Suggested Improvements</h3>
-  //         <ul className="list-disc pl-5">
-  //           {analysis.sustainabilityScore.improvements.map((improvement, index) => (
-  //             <li key={index} className="text-sm text-gray-600">{improvement}</li>
-  //           ))}
-  //         </ul>
-  //       </div>
-  //     </div>
-  //   );
-  // };
+  const renderErrorMessage = () => {
+    switch (error) {
+      case "unsupported":
+        return (
+          <div className={styles.unsupportedSite}>
+            <div className={styles.messageCard}>
+              <div className={styles.icon}>🌍</div>
+              <h2>Oops! Not a Supported Store</h2>
+              <p className={styles.mission}>
+                At EcoMart, we're on a mission to make online shopping more
+                sustainable. We carefully analyze products from selected
+                eco-conscious retailers to help you make environmentally
+                responsible choices.
+              </p>
+              <p>Currently available on:</p>
+              <ul>
+                {SUPPORTED_SITES.map((site) => (
+                  <li key={site}>• {site}</li>
+                ))}
+              </ul>
+              <p className={styles.suggestion}>
+                Join us in making the world a greener place, one purchase at a
+                time. Visit any of our supported stores to make sustainable
+                shopping choices.
+              </p>
+              <div className={styles.leaf}>🌿</div>
+            </div>
+          </div>
+        );
+      case "notab":
+        return (
+          <div className={styles.unsupportedSite}>
+            <div className={styles.messageCard}>
+              <div className={styles.icon}>⚠️</div>
+              <h2>No Active Tab Found</h2>
+              <p>Please open a supported e-commerce site to use EcoMart</p>
+            </div>
+          </div>
+        );
+      default:
+        return <div className="text-red-500">Error: {error}</div>;
+    }
+  };
 
   return (
     <div>
       {loading ? (
         <SustainabilityLoading />
       ) : error ? (
-        <div className="text-red-500">Error: {error}</div>
+        renderErrorMessage()
       ) : (
         <SustainabilityAnalysis analysis={generatedContent} />
       )}
