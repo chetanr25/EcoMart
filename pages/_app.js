@@ -3,6 +3,15 @@ import { useEffect, useState } from "react";
 import { analyseProduct } from "../utils/geminiService";
 import SustainabilityAnalysis from "../components/SustainabilityAnalysis";
 
+const LoadingState = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="text-center">
+      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500 mb-4"></div>
+      <p className="text-lg text-green-700">Analyzing sustainability...</p>
+    </div>
+  </div>
+);
+
 export default function App({ Component, pageProps }) {
   const [pageTitle, setPageTitle] = useState("");
   const [pageDescription, setPageDescription] = useState("");
@@ -153,11 +162,7 @@ export default function App({ Component, pageProps }) {
   return (
     <div>
       {loading ? (
-        <div>
-          {" "}
-          pageTitle {pageTitle}
-          Analyzing product...
-        </div>
+        <LoadingState />
       ) : error ? (
         <div className="text-red-500">Error: {error}</div>
       ) : (

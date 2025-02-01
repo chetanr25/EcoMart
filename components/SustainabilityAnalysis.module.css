@@ -1,33 +1,36 @@
 .analysis-results {
     margin: 20px;
     display: flex;
-    justify-content: center; /* Center the card horizontally */
+    justify-content: center;
 }
 
 .card {
     background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);  /* Green shadow */
-    transition: box-shadow 0.3s ease;
-    border: 1px solid #c8e6c9;  /* Light green border */
-    width: 600px; /* Set a fixed width for the card */
-    max-width: 100%; /* Ensure it doesn't exceed the viewport width */
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.15);
+    transition: all 0.3s ease;
+    border: 1px solid #c8e6c9;
+    width: 500px;
+    max-width: 100%;
 }
 
 .card:hover {
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);  /* Darker green shadow on hover */
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.25);
+    transform: translateY(-2px);
 }
 
 .title {
-    color: #2e7d32;  /* Dark green text */
-    font-size: 16px;
-    margin: 0 0 16px 0;
-    padding: 12px;
-    background: #f1f8e9;  /* Very light green background */
-    border-radius: 6px;
+    color: #1b5e20;
+    font-size: 24px;
+    margin: 0 0 24px 0;
+    padding: 16px;
+    background: #f1f8e9;
+    border-radius: 12px;
     line-height: 1.4;
-    border: 1px solid #dcedc8;  /* Very light green border */
+    border: 1px solid #dcedc8;
+    text-align: center;
+    font-weight: bold;
 }
 
 .analysis-results h2 {
@@ -42,42 +45,118 @@
 }
 
 .parameter {
-    margin-bottom: 1rem;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: #fafafa;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.parameter:hover {
+    background: #f5f5f5;
+    transform: scale(1.01);
+}
+
+.parameterTitle {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #2e7d32;
+}
+
+.parameterContent {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .progress-bar {
-    width: 100%;
-    background-color: #e2e8f0; /* Gray background */
-    border-radius: 0.25rem;
-    height: 1rem;
+    flex-grow: 1;
+    background-color: #e8f5e9;
+    border-radius: 8px;
+    height: 12px;
+    overflow: hidden;
 }
 
 .progress {
     height: 100%;
-    border-radius: 0.25rem;
+    border-radius: 8px;
+    transition: width 0.5s ease-out;
+}
+
+.scoreWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 70px;
 }
 
 .score {
-    margin-left: 0.5rem;
-    font-weight: normal;
-    color: #4a5568; /* Gray text */
+    font-weight: 500;
+    color: #1b5e20;
+}
+
+.emoji {
+    font-size: 18px;
+}
+
+.scoreText {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #558b2f;
 }
 
 .overall-score {
-    margin-top: 1.5rem;
-    font-size: 1.5rem;
+    margin: 24px 0;
+    padding: 20px;
+    background: #e8f5e9;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.overall-score h3 {
+    color: #1b5e20;
+    margin-bottom: 12px;
+}
+
+.scoreDisplay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.scoreNumber {
+    font-size: 48px;
     font-weight: bold;
-    color: #38a169; /* Green color */
+    color: #2e7d32;
+}
+
+.scoreTotal {
+    font-size: 24px;
+    color: #558b2f;
+}
+
+.scoreEmoji {
+    font-size: 32px;
+    margin-left: 8px;
 }
 
 .red {
-    background-color: #e53e3e; /* Red for low scores */
+    background-color: #ef5350;
 }
 
 .orange {
-    background-color: #dd6b20; /* Orange for medium scores */
+    background-color: #ff9800;
 }
 
 .green {
-    background-color: #38a169; /* Green for high scores */
+    background-color: #4caf50;
+}
+
+/* Loading animation */
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
 } 
