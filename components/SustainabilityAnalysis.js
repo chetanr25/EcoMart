@@ -20,13 +20,14 @@ const SustainabilityAnalysis = ({ analysis }) => {
 
   const getParameterIcon = (key) => {
     const icons = {
-      carbonFootprint: "🌍",
-      ecoCertifications: "📜",
-      energyEfficiency: "⚡",
+      carbonfootprint: "🌍",
+      ecocertifications: "📜",
+      energyefficiency: "⚡",
       recyclability: "♻️",
       lifespan: "⏳",
       repairability: "🔧",
-      packagingWaste: "📦",
+      packagingwaste: "📦",
+      traveldistance: "🚚",
     };
     return icons[key] || "📊";
   };
