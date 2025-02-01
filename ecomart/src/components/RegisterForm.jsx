@@ -1,5 +1,8 @@
 'use client';
 import { useState } from 'react';
+import { createProduct } from "@/api/products/create";
+import { useRouter } from 'next/navigation';
+import SubmissionSuccess from "@/components/SubmissionSuccess";
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -17,18 +20,59 @@ export default function RegisterForm() {
     productImage: '',
     price: '',
     productLink: '',
-    certifications: [{ id: 1, name: '', file: null }],
+    certifications: [{ id: 1, url: '', name: '' }],
     tags: []
   });
 
-  const [imagePreview, setImagePreview] = useState('');
-
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const router = useRouter();
 
   // Handlers
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form data:', formData);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const productData = {
+        certification: formData.certifications
+          .filter(cert => cert.url)
+          .map(cert => cert.url),
+        "company-head": {
+          "company-name": formData.companyName,
+          "owner-email": formData.ownerEmail,
+          "owner-name": formData.ownerName,
+          "phone-no": formData.phoneNo
+        },
+        product: {
+          name: formData.productName,
+          category: formData.category,
+          description: formData.productDescription,
+          brand: formData.brandName,
+          price: formData.price,
+          product_link: formData.productLink,
+          image_url: formData.productImage
+        },
+        tags: formData.tags
+      };
+
+      const result = await createProduct(productData);
+
+      if (result.success) {
+        setSuccess(true);
+        setTimeout(() => {
+          router.push('/submission-success');
+        }, 2000);
+      } else {
+        setError(result.error || 'Failed to register product');
+      }
+    } catch (error) {
+      setError(error.message || 'An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -39,40 +83,22 @@ export default function RegisterForm() {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData(prev => ({
-        ...prev,
-        productImage: file
-      }));
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleCertificateChange = (id, file) => {
-    if (file && file.type === 'application/pdf') {
-      const newCertificates = formData.certifications.map(cert => 
-        cert.id === id ? { ...cert, name: file.name, file: file } : cert
-      );
-      setFormData(prev => ({
-        ...prev,
-        certifications: newCertificates
-      }));
-    } else {
-      alert('Please upload a PDF file');
-    }
+  const handleCertificateChange = (certId, url) => {
+    setFormData(prev => ({
+      ...prev,
+      certifications: prev.certifications.map(cert => 
+        cert.id === certId 
+          ? { ...cert, url: url, name: `Certificate ${certId}` }
+          : cert
+      )
+    }));
   };
 
   const addCertificate = () => {
     const newId = Math.max(...formData.certifications.map(cert => cert.id)) + 1;
     setFormData(prev => ({
       ...prev,
-      certifications: [...prev.certifications, { id: newId, name: '', file: null }]
+      certifications: [...prev.certifications, { id: newId, url: '', name: '' }]
     }));
   };
 
@@ -105,7 +131,6 @@ export default function RegisterForm() {
       tags: prev.tags.filter(tag => tag !== tagToRemove)
     }));
   };
-
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -269,137 +294,69 @@ export default function RegisterForm() {
               />
             </div>
 
+            {/* Product Image Upload */}
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
                 Product Image *
               </label>
               <input
-                type="file"
+                type="text"
                 name="productImage"
-                onChange={handleImageChange}
+                value={formData.productImage}
+                onChange={handleChange}
                 required
-                accept="image/*"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="Enter product image URL"
               />
-              {imagePreview && (
-                <img 
-                  src={imagePreview} 
-                  alt="Preview" 
-                  className="mt-2 max-w-xs rounded-lg shadow-sm" 
-                  required
-                />
-              )}
             </div>
 
-            {/* Certifications Section */}
+            {/* Certificates Section */}
             <div className="col-span-2 mb-6">
               <div className="flex justify-between items-center mb-4">
                 <label className="block text-gray-700 text-sm font-bold">
-                  Certifications (PDF) *
+                  Certifications (URL) *
                 </label>
                 <button
                   type="button"
                   onClick={addCertificate}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700"
                 >
-                  <svg 
-                    className="h-5 w-5 mr-2" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6" 
-                    />
-                  </svg>
                   Add Certificate
                 </button>
               </div>
 
-              <div className="space-y-4 border rounded-lg p-4 bg-gray-50">
+              <div className="space-y-4">
                 {formData.certifications.map((cert) => (
-                  <div 
-                    key={cert.id} 
-                    className="bg-white p-4 rounded-lg shadow-sm border border-gray-200"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-600">
-                        Certificate {cert.id}
-                      </span>
+                  <div key={cert.id} className="border rounded-lg p-4">
+                    <div className="flex justify-between items-center mb-2">
+                      <span>Certificate {cert.id}</span>
                       {formData.certifications.length > 1 && (
                         <button
                           type="button"
                           onClick={() => removeCertificate(cert.id)}
-                          className="p-1 hover:bg-red-100 rounded-full text-red-600 transition-colors"
-                          title="Remove certificate"
+                          className="text-red-600 hover:text-red-800"
                         >
-                          <svg 
-                            className="h-5 w-5" 
-                            fill="none" 
-                            viewBox="0 0 24 24" 
-                            stroke="currentColor"
-                          >
-                            <path 
-                              strokeLinecap="round" 
-                              strokeLinejoin="round" 
-                              strokeWidth={2} 
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" 
-                            />
-                          </svg>
+                          Remove
                         </button>
                       )}
                     </div>
-                    
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="file"
-                        accept=".pdf"
-                        onChange={(e) => handleCertificateChange(cert.id, e.target.files[0])}
-                        className="block w-full text-sm text-gray-500
-                          file:mr-4 file:py-2 file:px-4
-                          file:rounded-full file:border-0
-                          file:text-sm file:font-semibold
-                          file:bg-green-50 file:text-green-700
-                          hover:file:bg-green-100
-                          cursor-pointer"
-                        required={cert.id === 1}
-                      />
-                    </div>
-                    
-                    {cert.file && (
-                      <div className="mt-2 flex items-center text-sm text-green-600">
-                        <svg 
-                          className="h-5 w-5 mr-2" 
-                          fill="none" 
-                          viewBox="0 0 24 24" 
-                          stroke="currentColor"
-                        >
-                          <path 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round" 
-                            strokeWidth={2} 
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" 
-                          />
-                        </svg>
-                        {cert.name}
-                      </div>
-                    )}
+                    <input
+                      type="url"
+                      placeholder="Enter certificate URL"
+                      value={cert.url}
+                      onChange={(e) => handleCertificateChange(cert.id, e.target.value)}
+                      required={cert.id === 1}
+                      className="block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+                    />
                   </div>
                 ))}
               </div>
-              
-              <p className="text-sm text-gray-500 mt-2">
-                At least one certificate is required. Only PDF files are accepted.
-              </p>
             </div>
 
             {/* Tags Section */}
             <div className="col-span-2 mb-4">
   <label className="block text-gray-700 text-sm font-bold mb-2">
-    Tags*
+    Tags
   </label>
   <div className="relative">
     <input
@@ -443,12 +400,62 @@ export default function RegisterForm() {
         <div className="flex items-center justify-center">
           <button
             type="submit"
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition-colors duration-200"
+            disabled={loading}
+            className={`
+              flex items-center justify-center
+              ${loading 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-green-500 hover:bg-green-700'
+              }
+              text-white font-bold py-3 px-6 rounded-lg 
+              focus:outline-none focus:shadow-outline 
+              transition-colors duration-200
+              min-w-[200px]
+            `}
           >
-            Register Product
+            {loading ? (
+              <>
+                <svg 
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  fill="none" 
+                  viewBox="0 0 24 24"
+                >
+                  <circle 
+                    className="opacity-25" 
+                    cx="12" 
+                    cy="12" 
+                    r="10" 
+                    stroke="currentColor" 
+                    strokeWidth="4"
+                  />
+                  <path 
+                    className="opacity-75" 
+                    fill="currentColor" 
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+                Registering...
+              </>
+            ) : (
+              'Register Product'
+            )}
           </button>
         </div>
         
+        {/* Success Message */}
+        {success && (
+          <div className="mt-4 p-4 bg-green-100 text-green-700 rounded-lg text-center">
+            Product registered successfully! Redirecting...
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <div className="mt-4 p-4 bg-red-100 text-red-700 rounded-lg text-center">
+            {error}
+          </div>
+        )}
       </div>
       </form>
     </div>
