@@ -16,12 +16,9 @@ const LoadingState = () => (
 );
 
 export default function App({ Component, pageProps }) {
-  const [pageTitle, setPageTitle] = useState("");
-  const [pageDescription, setPageDescription] = useState("");
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [generatedContent, setGeneratedContent] = useState(null);
 
   const SUPPORTED_SITES = [
     "amazon.com",
@@ -31,37 +28,29 @@ export default function App({ Component, pageProps }) {
     "ajio.com",
   ];
 
-  const isSupportedSite = (url) => {
-    return SUPPORTED_SITES.some((site) => url.includes(site));
-  };
-
   useEffect(() => {
     const getCurrentTab = async () => {
       try {
         setLoading(true);
-        const tabs = await chrome.tabs.query({
+        const [tab] = await chrome.tabs.query({
           active: true,
           currentWindow: true,
         });
 
-        if (tabs && tabs[0]) {
-          const tab = tabs[0];
-          setPageTitle(tab.title || tab.url);
-
-          if (isSupportedSite(tab.url)) {
-            const productData = {
-              title: tab.title,
-              url: tab.url,
-            };
-            const result = await analyseProduct(productData);
-            setGeneratedContent(result);
-          } else {
-            setError("unsupported");
-          }
-        } else {
-          setPageTitle("No active tab found");
-          setError("notab");
+        if (!tab) {
+          throw new Error("notab");
         }
+
+        if (!isSupportedSite(tab.url)) {
+          throw new Error("unsupported");
+        }
+
+        const result = await analyseProduct({
+          title: tab.title,
+          url: tab.url,
+        });
+
+        setAnalysis(result);
       } catch (error) {
         console.error("Error:", error);
         setError(error.message);
@@ -73,15 +62,11 @@ export default function App({ Component, pageProps }) {
     getCurrentTab();
   }, []);
 
-  return (
-    <div>
-      {loading ? (
-        <SustainabilityLoading />
-      ) : error ? (
-        <ErrorMessage error={error} supportedSites={SUPPORTED_SITES} />
-      ) : (
-        <SustainabilityAnalysis analysis={generatedContent} />
-      )}
-    </div>
-  );
+  const isSupportedSite = (url) => SUPPORTED_SITES.some(site => url.includes(site));
+
+  if (loading) return <SustainabilityLoading />;
+  if (error) return <ErrorMessage error={error} supportedSites={SUPPORTED_SITES} />;
+  if (!analysis) return null;
+
+  return <SustainabilityAnalysis analysis={analysis} />;
 }
