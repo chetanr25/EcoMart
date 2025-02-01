@@ -27,20 +27,22 @@ const SustainabilityAnalysis = ({ analysis }) => {
 
   return (
     <div className={styles['analysis-results']}>
-      <h2>Sustainability Analysis</h2>
-      {Object.entries(analysis.parameters).map(([key, param]) =>
-        renderParameter(
-          key.charAt(0).toUpperCase() + key.slice(1),
-          param.actual_value,
-          param.unit,
-          param.percentage_score
-        )
-      )}
-      <div className={styles['overall-score']}>
-        <h3>Overall Sustainability Score</h3>
-        <div>
-          {analysis.sustainabilityScore}/100
+      <div className={styles.card}>
+        <h2 className={styles.title}>Sustainability Analysis</h2>
+        <div className={styles['overall-score']}>
+          <h3>Overall Sustainability Score</h3>
+          <div>
+            {analysis.sustainabilityScore}/100
+          </div>
         </div>
+        {Object.entries(analysis.parameters).map(([key, param]) =>
+          renderParameter(
+            key.charAt(0).toUpperCase() + key.slice(1),
+            param.actual_value,
+            param.unit,
+            param.percentage_score
+          )
+        )}
       </div>
     </div>
   );
