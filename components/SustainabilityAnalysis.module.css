@@ -49,7 +49,10 @@
     padding: 16px;
     background: #fafafa;
     border-radius: 12px;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease-out;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideIn 0.5s ease-out forwards;
 }
 
 .parameter:hover {
@@ -68,20 +71,94 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    width: 100%;
 }
 
 .progress-bar {
-    flex-grow: 1;
-    background-color: #e8f5e9;
-    border-radius: 8px;
-    height: 12px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    height: 20px;
+    position: relative;
     overflow: hidden;
+    margin: 10px 0;
+    flex-grow: 1;
+    width: 70%;
+    transform-origin: left center;
 }
 
 .progress {
     height: 100%;
-    border-radius: 8px;
-    transition: width 0.5s ease-out;
+    border-radius: 10px;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    width: 0;
+    transform-origin: left center;
+}
+
+.progress::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: shimmer 2s infinite linear;
+    transform-origin: left center;
+}
+
+.progress::before {
+    content: attr(data-value);
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
+.progressLoading {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+.progressPulse {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        #f0f0f0 0%,
+        #e0e0e0 50%,
+        #f0f0f0 100%
+    );
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-200%);
+    }
+    100% {
+        transform: translateX(200%);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
 }
 
 .scoreWrapper {
@@ -89,6 +166,7 @@
     align-items: center;
     gap: 8px;
     min-width: 70px;
+    width: 30%;
 }
 
 .score {
@@ -143,20 +221,135 @@
 }
 
 .red {
-    background-color: #ef5350;
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+    box-shadow: 0 2px 4px rgba(231, 76, 60, 0.2);
 }
 
 .orange {
-    background-color: #ff9800;
+    background: linear-gradient(90deg, #f1c40f, #f39c12);
+    box-shadow: 0 2px 4px rgba(241, 196, 15, 0.2);
 }
 
 .green {
-    background-color: #4caf50;
+    background: linear-gradient(90deg, #2ecc71, #27ae60);
+    box-shadow: 0 2px 4px rgba(46, 204, 113, 0.2);
 }
+
+.score.loading {
+    animation: pulse 1.5s ease-in-out infinite;
+    opacity: 0.5;
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Add staggered animation delay for each parameter */
+.parameter:nth-child(1) { animation-delay: 0.1s; }
+.parameter:nth-child(2) { animation-delay: 0.2s; }
+.parameter:nth-child(3) { animation-delay: 0.3s; }
+.parameter:nth-child(4) { animation-delay: 0.4s; }
+.parameter:nth-child(5) { animation-delay: 0.5s; }
+.parameter:nth-child(6) { animation-delay: 0.6s; }
+.parameter:nth-child(7) { animation-delay: 0.7s; }
 
 /* Loading animation */
 @keyframes pulse {
     0% { opacity: 0.6; }
     50% { opacity: 1; }
     100% { opacity: 0.6; }
+}
+
+/* Skeleton loading styles */
+.skeleton {
+    background: #e0e0e0;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.skeletonShimmer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.5) 50%,
+        transparent 100%
+    );
+    animation: skeletonShimmer 1.5s infinite linear;
+}
+
+@keyframes skeletonShimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Update loading animation */
+.score.skeleton {
+    background: #e0e0e0;
+    border-radius: 4px;
+    color: transparent;
+    position: relative;
+    overflow: hidden;
+    min-width: 60px;
+    display: inline-block;
+}
+
+.score.skeleton::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.5) 50%,
+        transparent 100%
+    );
+    animation: skeletonShimmer 1.5s infinite linear;
+}
+
+/* Smooth transition from skeleton to actual content */
+.progress {
+    transition: all 0.3s ease-out, width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Add scale transform animation for progress */
+@keyframes progressIn {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
+}
+
+/* Apply the animation to progress bars when they appear */
+.progress {
+    animation: progressIn 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: left center;
+}
+
+.placeholderText {
+    visibility: hidden;
+    display: inline-block;
+    min-width: 40px;
+}
+
+.scoreText .skeleton {
+    min-width: 40px;
 } 

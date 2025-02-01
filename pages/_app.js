@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import { useEffect, useState } from "react";
 import { analyseProduct } from "../utils/geminiService";
 import SustainabilityAnalysis from "../components/SustainabilityAnalysis";
+import SustainabilityLoading from "../components/SustainabilityLoading";
 
 const LoadingState = () => (
   <div className="flex items-center justify-center min-h-screen">
@@ -24,43 +25,29 @@ export default function App({ Component, pageProps }) {
     const getCurrentTab = async () => {
       try {
         setLoading(true);
-        setPageTitle("Macbook Pro");
-        setPageDescription("Macbook Pro");
-        // const productData = {
-        //   title: "Macbook Pro",
-        //   description: "Macbook Pro",
-        //   url: "https://www.apple.com/macbook-pro/",
-        // };
-        // const result = await analyseProduct(productData);
-
-        // setGeneratedContent(result);
         // setPageTitle("Macbook Pro");
         // setPageDescription("Macbook Pro");
-        // console.log(result);
-        //  setLoading(false);
-        //      setGeneratedContent(result);
-        //     setLoading(false);
-            const tabs = await chrome.tabs.query({
-              active: true,
-              currentWindow: true,
-            });
+        const tabs = await chrome.tabs.query({
+          active: true,
+          currentWindow: true,
+        });
 
-            if (tabs && tabs[0]) {
-              const tab = tabs[0];
-              setPageTitle(tab.title || tab.url);
-              // setPageDescription(
-              //   document.querySelector("meta[name='description']")?.content
-              // );
-              const productData = {
-                title: tab.title,
-              };
-              const result = await analyseProduct(productData);
-              // console.log(result);
-               setGeneratedContent(result);
-              setLoading(false);
-            } else {
-              setPageTitle("No active tab found");
-            }
+        if (tabs && tabs[0]) {
+          const tab = tabs[0];
+          setPageTitle(tab.title || tab.url);
+          // setPageDescription(
+          //   document.querySelector("meta[name='description']")?.content
+          // );
+          const productData = {
+            title: tab.title,
+          };
+          const result = await analyseProduct(productData);
+          // console.log(result);
+          setGeneratedContent(result);
+          setLoading(false);
+        } else {
+          setPageTitle("No active tab found");
+        }
         //   } catch (error) {
         //     console.error("Error:", error);
         //     setPageTitle(`Error: ${error.message}`);
@@ -162,7 +149,7 @@ export default function App({ Component, pageProps }) {
   return (
     <div>
       {loading ? (
-        <LoadingState />
+        <SustainabilityLoading />
       ) : error ? (
         <div className="text-red-500">Error: {error}</div>
       ) : (
