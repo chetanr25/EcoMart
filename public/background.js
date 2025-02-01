@@ -1,4 +1,4 @@
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (changeInfo.status === "complete" && tab.url.includes("amazon.com")) {
     chrome.action.show(tabId);
   }

@@ -7,7 +7,6 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     const getCurrentTab = async () => {
       try {
-        // Using chrome.tabs.query with Promise syntax for better error handling
         const tabs = await chrome.tabs.query({
           active: true,
           currentWindow: true,
@@ -17,7 +16,7 @@ export default function App({ Component, pageProps }) {
           const tab = tabs[0];
           setPageTitle(tab.title || tab.url);
           setPageDescription(
-            document.querySelector("meta[name='description']")?.textContent
+            document.querySelector("meta[name='description']")?.content
           );
         } else {
           setPageTitle("No active tab found");
@@ -34,9 +33,9 @@ export default function App({ Component, pageProps }) {
   return (
     <div className="">
       <div className="">
-        <h1 className="">{pageTitle}</h1>
+        <h1 className="">Title: {pageTitle}</h1>
         <br />
-        <p className="">{pageDescription}</p>
+        <p className="">Description: {pageDescription}</p>
       </div>
     </div>
   );
