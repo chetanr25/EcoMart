@@ -7,17 +7,26 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     const getCurrentTab = async () => {
       try {
-        let [tab] = await chrome.tabs.query({
-          active: true,
-          currentWindow: true,
-        });
-        setPageTitle(tab);
-        const title = await chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          func: () => document.title,
-        });
-        console.log(title);
-        setPageTitle(title);
+        chrome.tabs.query(
+          { active: true, currentWindow: true },
+          function (tabs) {
+            const tab = tabs[0];
+            setPageTitle(tab.title);
+            // document.getElementById("title").textContent = tab.title;
+          }
+        );
+        // let [tab] = await chrome.tabs.query({
+        //   active: true,
+        //   currentWindow: true,
+        // });
+        // setPageTitle(tab);
+
+        // const title = await chrome.scripting.executeScript({
+        //   target: { tabId: tab.id },
+        //   func: () => document.title,
+        // });
+        // console.log(title);
+        // setPageTitle(title);
         // chrome.scripting.executeScript(
         //   {
         //     target: { tabId: tab.id },
