@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, where, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export const getAllProducts = async () => {
   try {
@@ -53,5 +53,31 @@ export const getProductsByStatus = async(status = 'disapproved') => {
         products: [],
         error: error.message || 'Failed to fetch products'
       };
+    }
+};
+
+export const createProduct = async (productData) => {
+    try {
+        const collectionRef = collection(db, 'eco-products');
+        
+        // Add timestamp to the data
+        const dataToSubmit = {
+            ...productData,
+            createdAt: serverTimestamp()
+        };
+        
+        const docRef = await addDoc(collectionRef, dataToSubmit);
+        
+        return {
+            success: true,
+            productId: docRef.id,
+            message: 'Product created successfully'
+        };
+    } catch (error) {
+        console.error('Error creating product:', error);
+        return {
+            success: false,
+            error: error.message || 'Failed to create product'
+        };
     }
 }; 
