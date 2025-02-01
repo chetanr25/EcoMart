@@ -1,8 +1,8 @@
 {
-  "name": "next-chrome-starter",
+  "name": "ecomart",
   "version": "0.0.1",
-  "description": "Next.js Chrome Extension Starter, Demo Example by ibnzUK. https://github.com/ibnzUK/next-chrome-starter",
-  "main": "index.js",
+  "description": "EcoMart Chrome Extension",
+  "main": "popup.js",
   "scripts": {
     "build": "npm run prep",
     "prep": "npm run exp && node out.js",
