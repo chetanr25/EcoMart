@@ -1,5 +1,33 @@
 .analysis-results {
     margin: 20px;
+    display: flex;
+    justify-content: center; /* Center the card horizontally */
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);  /* Green shadow */
+    transition: box-shadow 0.3s ease;
+    border: 1px solid #c8e6c9;  /* Light green border */
+    width: 600px; /* Set a fixed width for the card */
+    max-width: 100%; /* Ensure it doesn't exceed the viewport width */
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);  /* Darker green shadow on hover */
+}
+
+.title {
+    color: #2e7d32;  /* Dark green text */
+    font-size: 16px;
+    margin: 0 0 16px 0;
+    padding: 12px;
+    background: #f1f8e9;  /* Very light green background */
+    border-radius: 6px;
+    line-height: 1.4;
+    border: 1px solid #dcedc8;  /* Very light green border */
 }
 
 .analysis-results h2 {
