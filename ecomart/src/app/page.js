@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { useState } from 'react';
+import Feature from '../components/Feature';
+import Contact from '../components/Contact';
+import Footer from '../components/Footer';
 
+ 
+// import image from 'image.png';
 const growthData = [
   { month: 'Jan', growth: 20 },
   { month: 'Feb', growth: 35 },
@@ -75,14 +80,14 @@ export default function Home() {
             </div>
 
             {/* Register Button */}
-            <div className="hidden sm:ml-6 sm:flex sm:items-center">
+            {/* <div className="hidden sm:ml-6 sm:flex sm:items-center">
               <Link
                 href="/register"
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
               >
                 Register Now
               </Link>
-            </div>
+            </div> */}
 
             {/* Mobile menu button */}
             <div className="flex items-center sm:hidden">
@@ -147,7 +152,13 @@ export default function Home() {
               href="/register"
               className="block w-full text-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mx-2"
             >
-              Register Now
+              Register as User
+            </Link>
+            <Link
+              href="/adminlogin"
+              className="block w-full text-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 mx-2"
+            >
+              Register as Admin
             </Link>
           </div>
         </div>
@@ -157,7 +168,7 @@ export default function Home() {
       <div id="home" className="pt-16">
         {/* Hero Section */}
         <div className="relative overflow-hidden">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="relative z-10 pb-8 sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
               <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
                 <div className="sm:text-center lg:text-left">
@@ -174,207 +185,76 @@ export default function Home() {
                         href="/register"
                         className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10"
                       >
-                        Register With Us
+                        Register as User
                       </Link>
-                    </div>
-                    <div className="mt-3 sm:mt-0 sm:ml-3">
+                      <br />
                       <Link
-                        href="/products"
-                        className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 md:py-4 md:text-lg md:px-10"
+                        href="/adminlogin"
+                        className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10"
                       >
-                        View Products
+                      Login as Admin
                       </Link>
                     </div>
                   </div>
                 </div>
               </main>
             </div>
+            <div className="lg:block lg:w-1/2 flex items-center justify-center">
+              <img src="/images/image.png" alt="Eco-Friendly" className="w-4/5 h-[450px] object-contain" />
+            </div>
           </div>
         </div>
       </div>
 
-      <div id="about">
-        {/* About Section */}
-        <div className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="lg:text-center">
-              <h2 className="text-base text-green-600 font-semibold tracking-wide uppercase">About Our Products</h2>
-              <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                Sustainable Solutions for a Better Tomorrow
-              </p>
-              <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-                We carefully curate and verify eco-friendly products that meet our strict environmental standards.
-              </p>
-            </div>
+      {/* About Section */}
+      <div id="about" className="py-16 bg-green-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="lg:text-center">
+            {/* <h2 className="text-3xl font-extrabold text-gray-900"></h2> */}
+            <Feature />
+          </div>
+        </div>
+      </div>
 
-            <div className="mt-10">
-              <div className="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
-                {/* Feature 1 */}
-                <div className="relative">
-                  <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-green-500 text-white">
-                    🌱
-                  </div>
-                  <p className="ml-16 text-lg leading-6 font-medium text-gray-900">Eco-Friendly Materials</p>
-                  <p className="mt-2 ml-16 text-base text-gray-500">
-                    All our products are made from sustainable materials that minimize environmental impact.
-                  </p>
-                </div>
-
-                {/* Feature 2 */}
-                <div className="relative">
-                  <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-green-500 text-white">
-                    ♻️
-                  </div>
-                  <p className="ml-16 text-lg leading-6 font-medium text-gray-900">Recyclable Packaging</p>
-                  <p className="mt-2 ml-16 text-base text-gray-500">
-                    We ensure all our packaging is recyclable or biodegradable.
-                  </p>
-                </div>
-
-                {/* Feature 3 */}
-                <div className="relative">
-                  <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-green-500 text-white">
-                    🌍
-                  </div>
-                  <p className="ml-16 text-lg leading-6 font-medium text-gray-900">Carbon Neutral</p>
-                  <p className="mt-2 ml-16 text-base text-gray-500">
-                    We offset our carbon footprint through various environmental initiatives.
-                  </p>
-                </div>
-
-                {/* Feature 4 */}
-                <div className="relative">
-                  <div className="absolute flex items-center justify-center h-12 w-12 rounded-md bg-green-500 text-white">
-                    💚
-                  </div>
-                  <p className="ml-16 text-lg leading-6 font-medium text-gray-900">Verified Products</p>
-                  <p className="mt-2 ml-16 text-base text-gray-500">
-                    Each product undergoes thorough verification for environmental compliance.
-                  </p>
-                </div>
+      {/* Statistics Section */}
+      <div id="statistics" className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-3xl font-extrabold text-gray-900">Impact & Growth</h2>
+            <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div>
+                <h3 className="text-xl font-semibold text-gray-800">Growth over the Past Year</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={growthData}>
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="growth" stroke="#82ca9d" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-800">Environmental Impact</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={impactData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="year" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="impact" fill="#8884d8" />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div id="statistics">
-        {/* Statistics Section */}
-        <div className="py-16 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="lg:text-center mb-12">
-              <h2 className="text-base text-green-600 font-semibold tracking-wide uppercase">Impact Analysis</h2>
-              <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                Our Growth Story
-              </p>
-              <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-                See how businesses have grown with our eco-friendly certification platform
-              </p>
-            </div>
+      {/* Contact Section */}
+      <Contact />
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Monthly Growth Chart */}
-              <div className="bg-white p-6 rounded-lg shadow-lg">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Monthly Business Growth</h3>
-                <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={growthData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="month" />
-                      <YAxis />
-                      <Tooltip />
-                      <Bar dataKey="growth" fill="#059669" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-                <p className="mt-4 text-sm text-gray-500 text-center">
-                  Average monthly growth rate of businesses after certification
-                </p>
-              </div>
-
-              {/* Yearly Impact Chart */}
-              <div className="bg-white p-6 rounded-lg shadow-lg">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Environmental Impact Score</h3>
-                <div className="h-80">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={impactData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="year" />
-                      <YAxis />
-                      <Tooltip />
-                      <Line type="monotone" dataKey="impact" stroke="#059669" strokeWidth={2} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-                <p className="mt-4 text-sm text-gray-500 text-center">
-                  Yearly improvement in environmental impact scores
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="contact">
-        {/* Footer */}
-        <footer className="bg-gray-900">
-          <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Company Info */}
-              <div>
-                <h3 className="text-white text-lg font-semibold mb-4">Eco-Friendly Products</h3>
-                <p className="text-gray-400 text-sm">
-                  Making the world better through sustainable product certification.
-                </p>
-              </div>
-
-              {/* Quick Links */}
-              <div>
-                <h3 className="text-white text-lg font-semibold mb-4">Quick Links</h3>
-                <ul className="space-y-2">
-                  <li>
-                    <Link href="/register" className="text-gray-400 hover:text-green-500 text-sm">
-                      Register
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/products" className="text-gray-400 hover:text-green-500 text-sm">
-                      Products
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/about" className="text-gray-400 hover:text-green-500 text-sm">
-                      About Us
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Contact Info */}
-              <div>
-                <h3 className="text-white text-lg font-semibold mb-4">Contact Us</h3>
-                <ul className="space-y-2">
-                  <li className="text-gray-400 text-sm">
-                    <span className="font-medium">Email:</span> contact@eco-friendly.com
-                  </li>
-                  <li className="text-gray-400 text-sm">
-                    <span className="font-medium">Phone:</span> +1 (555) 123-4567
-                  </li>
-                  <li className="text-gray-400 text-sm">
-                    <span className="font-medium">Address:</span> 123 Green Street, Eco City
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="mt-8 pt-8 border-t border-gray-800">
-              <p className="text-center text-gray-400 text-sm">
-                © {new Date().getFullYear()} Eco-Friendly Products. All rights reserved.
-              </p>
-            </div>
-          </div>
-        </footer>
-      </div>
+      <Footer />
+      
     </div>
   );
 }
