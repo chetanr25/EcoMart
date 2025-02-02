@@ -4,15 +4,13 @@ import styles from "./SustainableAlternatives.module.css";
 const ProductImage = ({ src, alt }) => {
   const [imageError, setImageError] = useState(false);
 
-  const handleImageError = () => {
-    setImageError(true);
-  };
-
   if (imageError) {
     return (
-      <div className="w-8 h-8 flex items-center justify-center bg-gray-50 rounded-md">
+      <div
+        className={`${styles.productImage} bg-gray-100 flex items-center justify-center`}
+      >
         <svg
-          className="w-4 h-4 text-gray-400"
+          className="w-6 h-6 text-gray-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -32,51 +30,32 @@ const ProductImage = ({ src, alt }) => {
     <img
       src={src}
       alt={alt}
-      className="w-8 h-8 object-cover rounded-md"
-      onError={handleImageError}
+      className={styles.productImage}
+      onError={() => setImageError(true)}
     />
   );
 };
 
 const SustainableCard = ({ alternative }) => (
   <div
-    className={`bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer border border-gray-100 w-full ${styles.card}`}
+    className={styles.alternativeCard}
     onClick={() => window.open(alternative.product.product_link, "_blank")}
   >
-    <div className="p-2.5 flex items-start space-x-2">
-      {/* Left side - Image */}
-      <div className="flex-shrink-0">
-        <div
-          className={`w-12 h-12 rounded-md overflow-hidden ${styles.imageWrapper}`}
-        >
-          <ProductImage
-            src={alternative.product.image_url}
-            alt={alternative.product.name}
-          />
-        </div>
-      </div>
+    <ProductImage
+      src={alternative.product.image_url}
+      alt={alternative.product.name}
+    />
 
-      {/* Right side - Content */}
-      <div className="flex-1 min-w-0">
-        {/* Product Title & Price */}
-        <div className="flex justify-between items-start">
-          <h3 className="font-medium text-xs text-gray-900 truncate pr-2">
-            {alternative.product.name}
-          </h3>
-          <p className="text-xs font-semibold text-green-600 whitespace-nowrap">
-            ₹{alternative.product.price}
-          </p>
-        </div>
+    <div className={styles.productInfo}>
+      <h3 className={styles.productName}>{alternative.product.name}</h3>
+      <p className={styles.productDescription}>
+        {alternative.product.description}
+      </p>
 
-        {/* Description */}
-        <p className="text-xs text-gray-500 line-clamp-2 my-0.5">
-          {alternative.product.description}
-        </p>
-
-        {/* View Button */}
+      <div className={styles.productMeta}>
+        <span className={styles.price}>₹{alternative.product.price}</span>
         <button
-          className={`text-[10px] bg-green-50 text-green-700 px-2 py-0.5 rounded-full 
-            hover:bg-green-100 transition-colors flex items-center gap-0.5 mt-1 ${styles.viewButton}`}
+          className={styles.viewButton}
           onClick={(e) => {
             e.stopPropagation();
             window.open(alternative.product.product_link, "_blank");
@@ -84,10 +63,12 @@ const SustainableCard = ({ alternative }) => (
         >
           View Product
           <svg
-            className={`w-2.5 h-2.5 ${styles.arrowIcon}`}
+            className={styles.arrowIcon}
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            viewBox="0 0 24 24"
           >
             <path
               strokeLinecap="round"
@@ -106,14 +87,18 @@ const SustainableAlternatives = ({ alternatives }) => {
   if (!alternatives?.length) return null;
 
   return (
-    <div className="px-4 py-3">
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="text-sm font-semibold text-gray-900">Sustainable</h2>
-        <span className="text-[10px] text-gray-500">
-          {alternatives.length} found
-        </span>
+    <div className="py-3">
+      <div className="flex items-center justify-between mb-4 px-1">
+        <div>
+          <h2 className="text-base font-semibold text-gray-900">
+            Sustainable Alternatives
+          </h2>
+          <p className="text-sm text-gray-500 mt-0.5">
+            {alternatives.length} eco-friendly options found
+          </p>
+        </div>
       </div>
-      <div className="space-y-1.5">
+      <div className="space-y-3">
         {alternatives.slice(0, 2).map((alternative) => (
           <SustainableCard key={alternative.id} alternative={alternative} />
         ))}
