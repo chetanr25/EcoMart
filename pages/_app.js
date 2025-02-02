@@ -9,7 +9,7 @@ import { collection, getDocs } from "firebase/firestore";
 import SustainableAlternatives from "../components/SustainableAlternatives";
 import SustainableAlternativesSkeleton from "../components/SustainableAlternativesSkeleton";
 
-export default function App({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   const [analysis, setAnalysis] = useState(null);
   const [sustainableAlternatives, setSustainableAlternatives] = useState([]);
   const [isAlternativesLoading, setIsAlternativesLoading] = useState(false);
@@ -46,51 +46,76 @@ export default function App({ Component, pageProps }) {
         return [];
       }
 
-      // Enhanced matching logic with better substring matching
+      // Improved matching logic
       const isProductMatch = (product, analysisResult) => {
-        const matchesCategory =
-          product.product.category?.toLowerCase() ===
-          analysisResult?.category?.toLowerCase();
+        if (!analysisResult?.title) {
+          console.log("No analysis title provided");
+          return false;
+        }
 
-        const productTitle = analysisResult?.title?.toLowerCase() || "";
+        // Clean and lowercase the page title once
+        const pageTitle = (analysisResult.title || "").toLowerCase().trim();
+        console.log("Checking page title:", pageTitle);
 
-        const matchesTags = product.tags?.some((tag) => {
-          const normalizedTag = tag.toLowerCase();
-          // Check if tag is in title OR title contains the tag
-          return (
-            productTitle.includes(normalizedTag) ||
-            normalizedTag.includes(productTitle)
+        // Check if product has tags
+        if (!product.tags || !Array.isArray(product.tags)) {
+          console.log(
+            "Product has no valid tags array:",
+            product.product?.name
           );
+          return false;
+        }
+
+        // Check if any tag is present in the page title
+        const match = product.tags.some((tag) => {
+          if (!tag) return false;
+          const normalizedTag = tag.toLowerCase().trim();
+          const found = pageTitle.includes(normalizedTag);
+
+          if (found) {
+            console.log("Match found:", {
+              pageTitle,
+              tag: normalizedTag,
+              productName: product.product?.name,
+            });
+          }
+          return found;
         });
 
-        const isMatch = matchesCategory || matchesTags;
-
-        // Debug logging for matching
-        console.log("Match check:", {
-          product: product.product.title,
-          category: product.product.category,
-          tags: product.tags,
-          analysisTitle: productTitle,
-          matchesCategory,
-          matchesTags,
-          isMatch,
-        });
-
-        return isMatch;
+        return match;
       };
 
-      console.log("Query snapshot:", querySnapshot);
+      // Log the first document to verify data structure
+      const firstDoc = querySnapshot.docs[0]?.data();
+      console.log("First document data:", {
+        name: firstDoc?.product?.name,
+        tags: firstDoc?.tags,
+        category: firstDoc?.product?.category,
+      });
+
       const alternatives = querySnapshot.docs
-        .map((doc) => ({
-          id: doc.id,
-          certification: doc.data().certification || [],
-          companyHead: doc.data()["company-head"] || {},
-          product: doc.data().product || {},
-          tags: doc.data().tags || [],
-        }))
+        .map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            certification: data.certification || [],
+            companyHead: data["company-head"] || {},
+            product: data.product || {},
+            tags: data.tags || [],
+          };
+        })
         .filter((product) => isProductMatch(product, analysisResult));
 
-      console.log("Alternatives found:", alternatives);
+      console.log("Matching results:", {
+        totalProducts: querySnapshot.docs.length,
+        matchingProducts: alternatives.length,
+        matches: alternatives.map((a) => ({
+          name: a.product.name,
+          category: a.product.category,
+          tags: a.tags,
+        })),
+      });
+
       return alternatives;
     } catch (error) {
       console.error("Error in getSustainableAlternatives:", {
@@ -99,7 +124,6 @@ export default function App({ Component, pageProps }) {
         code: error.code,
         stack: error.stack,
       });
-
       setError("database");
       return [];
     }
@@ -109,7 +133,8 @@ export default function App({ Component, pageProps }) {
     const getCurrentTab = async () => {
       try {
         setLoading(true);
-        setError(null); // Reset error state
+        setError(null);
+        setIsAlternativesLoading(true);
 
         const tabs = await chrome.tabs.query({
           active: true,
@@ -134,16 +159,16 @@ export default function App({ Component, pageProps }) {
           url: tab.url,
         };
 
+        // Get analysis first
         const result = await analyseProduct(productData);
         setAnalysis(result);
 
-        setIsAlternativesLoading(true);
-        const alternatives = await getSustainableAlternatives(result);
+        // Then get alternatives
+        const alternatives = await getSustainableAlternatives(productData);
+        console.log("Found alternatives:", alternatives);
 
-        if (!error) {
-          // Only set alternatives if no error occurred
-          setSustainableAlternatives(alternatives);
-        }
+        // Update alternatives regardless of error state
+        setSustainableAlternatives(alternatives);
       } catch (error) {
         console.error("Error in getCurrentTab:", error);
         setError(error.message);
@@ -159,7 +184,10 @@ export default function App({ Component, pageProps }) {
   return (
     <div>
       {loading ? (
-        <SustainabilityLoading />
+        <div>
+          <h1>{pageTitle.toLowerCase()}</h1>
+          <SustainabilityLoading />
+        </div>
       ) : error ? (
         <ErrorMessage error={error} supportedSites={SUPPORTED_SITES} />
       ) : (
@@ -167,15 +195,12 @@ export default function App({ Component, pageProps }) {
           <SustainabilityAnalysis analysis={analysis} />
           {isAlternativesLoading ? (
             <SustainableAlternativesSkeleton />
-          ) : sustainableAlternatives.length > 0 ? (
+          ) : (
             <SustainableAlternatives alternatives={sustainableAlternatives} />
-          ) : error === "database" ? (
-            <div className="error-message">
-              Unable to load sustainable alternatives. Please try again later.
-            </div>
-          ) : null}
+          )}
         </>
       )}
     </div>
   );
 }
+export default App;
