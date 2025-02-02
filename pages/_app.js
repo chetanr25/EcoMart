@@ -46,18 +46,15 @@ function App({ Component, pageProps }) {
         return [];
       }
 
-      // Improved matching logic
       const isProductMatch = (product, analysisResult) => {
         if (!analysisResult?.title) {
           console.log("No analysis title provided");
           return false;
         }
 
-        // Clean and lowercase the page title once
         const pageTitle = (analysisResult.title || "").toLowerCase().trim();
         console.log("Checking page title:", pageTitle);
 
-        // Check if product has tags
         if (!product.tags || !Array.isArray(product.tags)) {
           console.log(
             "Product has no valid tags array:",
@@ -66,7 +63,6 @@ function App({ Component, pageProps }) {
           return false;
         }
 
-        // Check if any tag is present in the page title
         const match = product.tags.some((tag) => {
           if (!tag) return false;
           const normalizedTag = tag.toLowerCase().trim();
@@ -85,7 +81,6 @@ function App({ Component, pageProps }) {
         return match;
       };
 
-      // Log the first document to verify data structure
       const firstDoc = querySnapshot.docs[0]?.data();
       console.log("First document data:", {
         name: firstDoc?.product?.name,
@@ -159,15 +154,12 @@ function App({ Component, pageProps }) {
           url: tab.url,
         };
 
-        // Get analysis first
         const result = await analyseProduct(productData);
         setAnalysis(result);
 
-        // Then get alternatives
         const alternatives = await getSustainableAlternatives(productData);
         console.log("Found alternatives:", alternatives);
 
-        // Update alternatives regardless of error state
         setSustainableAlternatives(alternatives);
       } catch (error) {
         console.error("Error in getCurrentTab:", error);
@@ -184,10 +176,7 @@ function App({ Component, pageProps }) {
   return (
     <div>
       {loading ? (
-        <div>
-          <h1>{pageTitle.toLowerCase()}</h1>
-          <SustainabilityLoading />
-        </div>
+        <SustainabilityLoading />
       ) : error ? (
         <ErrorMessage error={error} supportedSites={SUPPORTED_SITES} />
       ) : (
