@@ -3,20 +3,17 @@ import { useEffect, useState } from "react";
 import { analyseProduct } from "../utils/geminiService";
 import SustainabilityAnalysis from "../components/SustainabilityAnalysis";
 import SustainabilityLoading from "../components/SustainabilityLoading";
-import styles from "../components/UnsupportedSite.module.css";
 import ErrorMessage from "../components/ErrorMessage";
+import { db } from "../utils/firebase";
+import { collection, getDocs } from "firebase/firestore";
+import SustainableAlternatives from "../components/SustainableAlternatives";
+import SustainableAlternativesSkeleton from "../components/SustainableAlternativesSkeleton";
 
-const LoadingState = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="text-center">
-      <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500 mb-4"></div>
-      <p className="text-lg text-green-700">Analyzing sustainability...</p>
-    </div>
-  </div>
-);
-
-export default function App({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   const [analysis, setAnalysis] = useState(null);
+  const [sustainableAlternatives, setSustainableAlternatives] = useState([]);
+  const [isAlternativesLoading, setIsAlternativesLoading] = useState(false);
+  const [pageTitle, setPageTitle] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -28,45 +25,182 @@ export default function App({ Component, pageProps }) {
     "ajio.com",
   ];
 
+  const isSupportedSite = (url) => {
+    return SUPPORTED_SITES.some((site) => url.includes(site));
+  };
+
+  const getSustainableAlternatives = async (analysisResult) => {
+    try {
+      console.log("Analysis result received:", analysisResult);
+
+      if (!db) {
+        console.error("Firestore database not initialized");
+        return [];
+      }
+
+      const ecoProductsRef = collection(db, "eco-products");
+      const querySnapshot = await getDocs(ecoProductsRef);
+
+      if (querySnapshot.empty) {
+        console.log("No documents found in eco-products collection");
+        return [];
+      }
+
+      // Improved matching logic
+      const isProductMatch = (product, analysisResult) => {
+        if (!analysisResult?.title) {
+          console.log("No analysis title provided");
+          return false;
+        }
+
+        // Clean and lowercase the page title once
+        const pageTitle = (analysisResult.title || "").toLowerCase().trim();
+        console.log("Checking page title:", pageTitle);
+
+        // Check if product has tags
+        if (!product.tags || !Array.isArray(product.tags)) {
+          console.log(
+            "Product has no valid tags array:",
+            product.product?.name
+          );
+          return false;
+        }
+
+        // Check if any tag is present in the page title
+        const match = product.tags.some((tag) => {
+          if (!tag) return false;
+          const normalizedTag = tag.toLowerCase().trim();
+          const found = pageTitle.includes(normalizedTag);
+
+          if (found) {
+            console.log("Match found:", {
+              pageTitle,
+              tag: normalizedTag,
+              productName: product.product?.name,
+            });
+          }
+          return found;
+        });
+
+        return match;
+      };
+
+      // Log the first document to verify data structure
+      const firstDoc = querySnapshot.docs[0]?.data();
+      console.log("First document data:", {
+        name: firstDoc?.product?.name,
+        tags: firstDoc?.tags,
+        category: firstDoc?.product?.category,
+      });
+
+      const alternatives = querySnapshot.docs
+        .map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            certification: data.certification || [],
+            companyHead: data["company-head"] || {},
+            product: data.product || {},
+            tags: data.tags || [],
+          };
+        })
+        .filter((product) => isProductMatch(product, analysisResult));
+
+      console.log("Matching results:", {
+        totalProducts: querySnapshot.docs.length,
+        matchingProducts: alternatives.length,
+        matches: alternatives.map((a) => ({
+          name: a.product.name,
+          category: a.product.category,
+          tags: a.tags,
+        })),
+      });
+
+      return alternatives;
+    } catch (error) {
+      console.error("Error in getSustainableAlternatives:", {
+        name: error.name,
+        message: error.message,
+        code: error.code,
+        stack: error.stack,
+      });
+      setError("database");
+      return [];
+    }
+  };
+
   useEffect(() => {
     const getCurrentTab = async () => {
       try {
         setLoading(true);
-        const [tab] = await chrome.tabs.query({
+        setError(null);
+        setIsAlternativesLoading(true);
+
+        const tabs = await chrome.tabs.query({
           active: true,
           currentWindow: true,
         });
 
-        if (!tab) {
-          throw new Error("notab");
+        if (!tabs?.[0]) {
+          setError("notab");
+          return;
         }
+
+        const tab = tabs[0];
+        setPageTitle(tab.title || tab.url);
 
         if (!isSupportedSite(tab.url)) {
-          throw new Error("unsupported");
+          setError("unsupported");
+          return;
         }
 
-        const result = await analyseProduct({
+        const productData = {
           title: tab.title,
           url: tab.url,
-        });
+        };
 
+        // Get analysis first
+        const result = await analyseProduct(productData);
         setAnalysis(result);
+
+        // Then get alternatives
+        const alternatives = await getSustainableAlternatives(productData);
+        console.log("Found alternatives:", alternatives);
+
+        // Update alternatives regardless of error state
+        setSustainableAlternatives(alternatives);
       } catch (error) {
-        console.error("Error:", error);
+        console.error("Error in getCurrentTab:", error);
         setError(error.message);
       } finally {
         setLoading(false);
+        setIsAlternativesLoading(false);
       }
     };
 
     getCurrentTab();
   }, []);
 
-  const isSupportedSite = (url) => SUPPORTED_SITES.some(site => url.includes(site));
-
-  if (loading) return <SustainabilityLoading />;
-  if (error) return <ErrorMessage error={error} supportedSites={SUPPORTED_SITES} />;
-  if (!analysis) return null;
-
-  return <SustainabilityAnalysis analysis={analysis} />;
+  return (
+    <div>
+      {loading ? (
+        <div>
+          <h1>{pageTitle.toLowerCase()}</h1>
+          <SustainabilityLoading />
+        </div>
+      ) : error ? (
+        <ErrorMessage error={error} supportedSites={SUPPORTED_SITES} />
+      ) : (
+        <>
+          <SustainabilityAnalysis analysis={analysis} />
+          {isAlternativesLoading ? (
+            <SustainableAlternativesSkeleton />
+          ) : (
+            <SustainableAlternatives alternatives={sustainableAlternatives} />
+          )}
+        </>
+      )}
+    </div>
+  );
 }
+export default App;
