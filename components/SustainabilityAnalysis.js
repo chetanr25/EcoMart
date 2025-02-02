@@ -6,7 +6,8 @@ import SustainabilityLoading from "./SustainabilityLoading";
 const SustainabilityAnalysis = ({ analysis }) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const getColor = (percentage) => {
+  const getColor = (percentage, parameterName) => {
+    if (parameterName === 'carbonFootprint') return styles.blue;
     if (percentage < 50) return styles.red;
     if (percentage < 75) return styles.orange;
     return styles.green;
@@ -20,22 +21,28 @@ const SustainabilityAnalysis = ({ analysis }) => {
 
   const getParameterIcon = (key) => {
     const icons = {
-      carbonfootprint: "🌍",
-      ecocertifications: "📜",
-      energyefficiency: "⚡",
+      carbonFootprint: "🌍",
+      ecoCertifications: "📜",
+      energyEfficiency: "⚡",
       recyclability: "♻️",
+      waterUsage: "💧",
+      biodegradability: "🌱",
+      toxicMaterials: "⚠️",
       lifespan: "⏳",
       repairability: "🔧",
-      packagingwaste: "📦",
-      traveldistance: "🚚",
+      packagingWaste: "📦",
+      transportDistance: "🚚",
     };
     return icons[key] || "📊";
   };
 
-  const renderParameter = (label, value, unit, percentage) => (
-    <div className={styles.parameter} key={label}>
+  const renderParameter = (param) => (
+    <div className={styles.parameter} key={param.parameter}>
       <h3 className={styles.parameterTitle}>
-        {getParameterIcon(label.toLowerCase())} {label}
+        {getParameterIcon(param.parameter)} {param.parameter}
+        <span className={styles.weightBadge}>
+          Weight: {(param.weight * 100).toFixed()}%
+        </span>
       </h3>
       <div className={styles.parameterContent}>
         <div className={styles["progress-bar"]}>
@@ -47,40 +54,29 @@ const SustainabilityAnalysis = ({ analysis }) => {
             </div>
           ) : (
             <div
-              className={`${styles.progress} ${getColor(percentage)}`}
+              className={`${styles.progress} ${getColor(param.rawScore, param.parameter)}`}
               style={{
-                width: `${percentage}%`,
+                width: `${param.rawScore}%`,
                 transition: "width 1.2s cubic-bezier(0.4, 0, 0.2, 1)",
               }}
-              data-value={`${percentage}%`}
+              data-value={param.parameter === 'carbonFootprint' 
+                ? `${param.rawScore}% towards sustainability`
+                : `${param.rawScore}%`}
             />
           )}
         </div>
         <div className={styles.scoreWrapper}>
-          <span
-            className={`${styles.score} ${isLoading ? styles.skeleton : ""}`}
-          >
-            {isLoading ? (
-              <span className={styles.placeholderText}>&nbsp;</span>
-            ) : (
-              `${value} ${unit}`
-            )}
+          <span className={styles.actualValue}>
+            {param.actualValue} {param.unit}
+          </span>
+          <span className={styles.contribution}>
+            Contribution: {param.weightedScore}
           </span>
           <span className={styles.emoji}>
-            {!isLoading && getEmoji(percentage)}
+            {!isLoading && getEmoji(param.rawScore)}
           </span>
         </div>
       </div>
-      <p className={styles.scoreText}>
-        Score:{" "}
-        {isLoading ? (
-          <span className={styles.skeleton}>
-            <span className={styles.placeholderText}>&nbsp;&nbsp;&nbsp;</span>
-          </span>
-        ) : (
-          `${percentage}%`
-        )}
-      </p>
     </div>
   );
 
@@ -101,14 +97,13 @@ const SustainabilityAnalysis = ({ analysis }) => {
           </div>
         </div>
         <div className={styles.parameters}>
-          {Object.entries(analysis.parameters).map(([key, param]) =>
-            renderParameter(
-              key.charAt(0).toUpperCase() + key.slice(1),
-              param.actual_value,
-              param.unit,
-              param.percentage_score
-            )
-          )}
+          {analysis.weightedBreakdown
+            .sort((a, b) => {
+              if (a.parameter === 'carbonFootprint') return 1;
+              if (b.parameter === 'carbonFootprint') return -1;
+              return 0;
+            })
+            .map((param) => renderParameter(param))}
         </div>
       </div>
     </div>
@@ -116,7 +111,19 @@ const SustainabilityAnalysis = ({ analysis }) => {
 };
 
 SustainabilityAnalysis.propTypes = {
-  analysis: PropTypes.object.isRequired,
+  analysis: PropTypes.shape({
+    sustainabilityScore: PropTypes.number.isRequired,
+    weightedBreakdown: PropTypes.arrayOf(
+      PropTypes.shape({
+        parameter: PropTypes.string.isRequired,
+        actualValue: PropTypes.number.isRequired,
+        unit: PropTypes.string.isRequired,
+        rawScore: PropTypes.number.isRequired,
+        weight: PropTypes.number.isRequired,
+        weightedScore: PropTypes.string.isRequired
+      })
+    ).isRequired
+  }).isRequired,
 };
 
 export default SustainabilityAnalysis;

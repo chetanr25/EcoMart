@@ -46,13 +46,11 @@
 
 .parameter {
     margin-bottom: 20px;
-    padding: 16px;
+    padding: 20px;
     background: #fafafa;
     border-radius: 12px;
     transition: all 0.3s ease-out;
-    transform: translateY(20px);
-    opacity: 0;
-    animation: slideIn 0.5s ease-out forwards;
+    border: 1px solid rgba(46, 125, 50, 0.1);
 }
 
 .parameter:hover {
@@ -61,10 +59,10 @@
 }
 
 .parameterTitle {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: #2e7d32;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
 }
 
 .parameterContent {
@@ -116,13 +114,15 @@
 .progress::before {
     content: attr(data-value);
     position: absolute;
-    right: 5px;
+    right: 8px;
     top: 50%;
     transform: translateY(-50%);
     color: white;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
     text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    padding: 0 4px;
 }
 
 .progressLoading {
@@ -164,8 +164,8 @@
 .scoreWrapper {
     display: flex;
     align-items: center;
-    gap: 8px;
-    min-width: 70px;
+    gap: 12px;
+    min-width: 200px;
     width: 30%;
 }
 
@@ -233,6 +233,11 @@
 .green {
     background: linear-gradient(90deg, #2ecc71, #27ae60);
     box-shadow: 0 2px 4px rgba(46, 204, 113, 0.2);
+}
+
+.blue {
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
 }
 
 .score.loading {
@@ -352,4 +357,27 @@
 
 .scoreText .skeleton {
     min-width: 40px;
+}
+
+.weightBadge {
+    font-size: 12px;
+    background: rgba(46, 125, 50, 0.1);
+    padding: 4px 8px;
+    border-radius: 12px;
+    margin-left: 8px;
+    color: #2e7d32;
+}
+
+.actualValue {
+    font-weight: 500;
+    color: #1b5e20;
+    min-width: 80px;
+}
+
+.contribution {
+    font-size: 12px;
+    color: #558b2f;
+    background: rgba(85, 139, 47, 0.1);
+    padding: 4px 8px;
+    border-radius: 8px;
 } 
