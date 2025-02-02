@@ -6,7 +6,8 @@ import SustainabilityLoading from "./SustainabilityLoading";
 const SustainabilityAnalysis = ({ analysis }) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const getColor = (percentage) => {
+  const getColor = (percentage, parameterName) => {
+    if (parameterName === 'carbonFootprint') return styles.blue;
     if (percentage < 50) return styles.red;
     if (percentage < 75) return styles.orange;
     return styles.green;
@@ -53,12 +54,14 @@ const SustainabilityAnalysis = ({ analysis }) => {
             </div>
           ) : (
             <div
-              className={`${styles.progress} ${getColor(param.rawScore)}`}
+              className={`${styles.progress} ${getColor(param.rawScore, param.parameter)}`}
               style={{
                 width: `${param.rawScore}%`,
                 transition: "width 1.2s cubic-bezier(0.4, 0, 0.2, 1)",
               }}
-              data-value={`${param.rawScore}%`}
+              data-value={param.parameter === 'carbonFootprint' 
+                ? `${param.rawScore}% towards sustainability`
+                : `${param.rawScore}%`}
             />
           )}
         </div>
@@ -94,7 +97,13 @@ const SustainabilityAnalysis = ({ analysis }) => {
           </div>
         </div>
         <div className={styles.parameters}>
-          {analysis.weightedBreakdown.map(renderParameter)}
+          {analysis.weightedBreakdown
+            .sort((a, b) => {
+              if (a.parameter === 'carbonFootprint') return 1;
+              if (b.parameter === 'carbonFootprint') return -1;
+              return 0;
+            })
+            .map((param) => renderParameter(param))}
         </div>
       </div>
     </div>

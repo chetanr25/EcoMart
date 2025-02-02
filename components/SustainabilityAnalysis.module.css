@@ -114,13 +114,15 @@
 .progress::before {
     content: attr(data-value);
     position: absolute;
-    right: 5px;
+    right: 8px;
     top: 50%;
     transform: translateY(-50%);
     color: white;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
     text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+    padding: 0 4px;
 }
 
 .progressLoading {
@@ -231,6 +233,11 @@
 .green {
     background: linear-gradient(90deg, #2ecc71, #27ae60);
     box-shadow: 0 2px 4px rgba(46, 204, 113, 0.2);
+}
+
+.blue {
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    box-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
 }
 
 .score.loading {
