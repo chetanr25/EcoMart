@@ -1,11 +1,20 @@
 const PARAMETER_WEIGHTS = {
-  carbonFootprint: 0.1,
-  ecoCertifications: 0.15,
+  carbonFootprint: 0,
+  ecoCertifications: 0.2,
   energyEfficiency: 0.15,
   recyclability: 0.15,
   waterUsage: 0.1,
-  biodegradability: 0.1,
-  toxicMaterials: 0.1,
+  biodegradability: 0.2,
+  toxicMaterials: 0.2,
+  lifespan: 0.1,
+  repairability: 0.1,
+  packagingWaste: 0.1,
+  transportDistance: 0.1,
+  resourceEfficiency: 0.1,
+  chemicalUse: 0.1,
+  renewableContent: 0.3,
+  workingConditions: 0.1,
+  VOCEmissions: 0.1,
 };
 
 export async function analyseProduct(productData) {
@@ -46,15 +55,15 @@ Example Output:
       "unit": "kg CO₂",
       "percentage_score": 85
     },
-    "ecoCertifications": {
-      "actual_value": 3,
-      "unit": "count",
-      "percentage_score": 80
-    },
     "energyEfficiency": {
       "actual_value": 85,
       "unit": "%",
       "percentage_score": 90
+    },
+    "ecoCertifications": {
+      "actual_value": 3,
+      "unit": "count",
+      "percentage_score": 80
     }
   }
 }`;

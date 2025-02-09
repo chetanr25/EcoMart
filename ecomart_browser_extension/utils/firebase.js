@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, enableIndexedDbPersistence } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -17,14 +17,14 @@ try {
   app = initializeApp(firebaseConfig);
   db = getFirestore(app);
 
-  enableIndexedDbPersistence(db).catch((err) => {
-    if (err.code === "failed-precondition") {
-      console.warn("Firebase persistence failed: Multiple tabs open");
-      console.warn("Firebase persistence failed: Multiple tabs open");
-    } else if (err.code === "unimplemented") {
-      console.warn("Firebase persistence not supported in this browser");
-    }
-  });
+  // enableIndexedDbPersistence(db).catch((err) => {
+  //   if (err.code === "failed-precondition") {
+  //     console.warn("Firebase persistence failed: Multiple tabs open");
+  //     console.warn("Firebase persistence failed: Multiple tabs open");
+  //   } else if (err.code === "unimplemented") {
+  //     console.warn("Firebase persistence not supported in this browser");
+  //   }
+  // });
 } catch (error) {
   console.error("Error initializing Firebase:", error);
 }
