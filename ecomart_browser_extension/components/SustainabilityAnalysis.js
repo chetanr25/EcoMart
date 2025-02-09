@@ -35,13 +35,24 @@ const SustainabilityAnalysis = ({ analysis }) => {
     return icons[key] || "📊";
   };
 
+  const formatParameterTitle = (parameterName) => {
+    // First, split by capital letters and ensure first letter is capital
+    const words = parameterName
+      .replace(/([A-Z])/g, " $1") // Add space before capital letters
+      .replace(/^./, (str) => str.toUpperCase()) // Capitalize first letter
+      .trim(); // Remove any extra spaces
+
+    return words;
+  };
+
   const renderParameter = (param) => (
     <div className={styles.parameter} key={param.parameter}>
       <h3 className={styles.parameterTitle}>
-        {getParameterIcon(param.parameter)} {param.parameter}
-        <span className={styles.weightBadge}>
+        {getParameterIcon(param.parameter)}{" "}
+        {formatParameterTitle(param.parameter)}
+        {/* <span className={styles.weightBadge}>
           Weight: {(param.weight * 100).toFixed()}%
-        </span>
+        </span> */}
       </h3>
       <div className={styles.parameterContent}>
         <div className={styles["progress-bar"]}>
@@ -110,6 +121,17 @@ const SustainabilityAnalysis = ({ analysis }) => {
               return 0;
             })
             .map((param) => renderParameter(param))}
+        </div>
+
+        <div className={styles.disclaimerCard}>
+          <div className={styles.disclaimerContent}>
+            <span className={styles.aiIcon}>🤖</span>
+            <p className={styles.disclaimerText}>
+              AI-Powered Analysis: This environmental assessment is generated
+              using artificial intelligence and should be used as a general
+              guide only. Actual environmental impact may vary.
+            </p>
+          </div>
         </div>
       </div>
     </div>

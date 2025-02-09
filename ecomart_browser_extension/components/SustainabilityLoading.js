@@ -22,7 +22,7 @@ const SustainabilityLoading = () => {
     const interval = setInterval(() => {
       currentIndex = (currentIndex + 1) % texts.length;
       setLoadingText(texts[currentIndex]);
-    }, 2000);
+    }, 700);
 
     return () => clearInterval(interval);
   }, []);
