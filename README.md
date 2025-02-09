@@ -18,6 +18,28 @@
 
 ---
 
+
+## 🌍 Key Parameters for Sustainability Score
+
+The sustainability score is calculated using weighted parameters that consider the environmental impact of each product. These parameters are:
+
+1. **🌱 Overall Sustainability Score**: Quick summary rating (0-100%) for decision-making.
+2. **🌍 Carbon Footprint**: CO₂ emissions during production.
+3. **🚰 Water Usage**: Liters of water consumed for production.
+4. **🏭 Manufacturing Impact**: Pollution, deforestation, or waste generated.
+5. **🔄 Recyclability**: Percentage of product that can be recycled.
+6. **✅ Eco Certifications**: Fair Trade, FSC, Energy Star, etc.
+7. **🛢️ Harmful Chemicals Used**: Toxic materials like microplastics and heavy metals.
+8. **🌾 Material Composition**: Organic, recycled, synthetic materials used.
+9. **🔥 Biodegradability**: Time taken to decompose.
+10. **✈️ Shipping Impact**: Distance traveled & CO₂ emissions from transportation.
+
+### Example Calculation for a Product
+
+For example, a product like an **Eco-friendly Bluetooth Speaker** will have a sustainability score calculated based on the weighted sum of individual scores for each parameter.
+
+
+
 ## 📊 Sustainability Metrics
 
 We have conducted extensive research and developed a **comprehensive scoring system** to evaluate products across key environmental factors. Each metric is assigned a specific weight based on its impact, helping users make more eco-conscious purchasing decisions.
