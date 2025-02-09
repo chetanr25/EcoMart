@@ -1,15 +1,13 @@
 # Ecomart - Making Sustainable Shopping Simple
-
- <div style="float: right;" align="center">
-    <img width="155" alt="ecomart_plain" src="https://github.com/user-attachments/assets/1a9f502e-3a02-4e6a-8123-b58b8db2bcd7" />
-<br /> 
-    <img width="155" alt="Icon" src="https://github.com/user-attachments/assets/c7ff7e6e-7f64-4d5f-ac54-f8b148e7a904" />
-  </div>
-</div>
-
 ## 🌿 About Ecomart
 
+<img width="155" alt="Icon" src="https://github.com/user-attachments/assets/c7ff7e6e-7f64-4d5f-ac54-f8b148e7a904" align="right" />
+
+
+	
 **Ecomart** is a Chrome extension that revolutionizes online shopping by providing real-time sustainability insights. When browsing products on major e-commerce platforms like Amazon, our extension analyzes product sustainability and suggests eco-friendly alternatives, making it easier than ever to shop responsibly.
+
+<br />
 
 ## ✨ Key Features
 
