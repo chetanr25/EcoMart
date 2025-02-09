@@ -439,4 +439,43 @@
 
 .title {
     margin-bottom: 24px;
+}
+
+.disclaimerCard {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: linear-gradient(145deg, #f8fdf9, #e8f5e9);
+    border-radius: 12px;
+    border: 1px solid rgba(76, 175, 80, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.disclaimerCard:hover {
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.1);
+    transform: translateY(-1px);
+}
+
+.disclaimerContent {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    color: #2e7d32;
+    line-height: 1.5;
+}
+
+.aiIcon {
+    font-size: 1.2rem;
+    background: #e8f5e9;
+    padding: 0.5rem;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.1);
+}
+
+.disclaimerText {
+    margin: 0;
+    line-height: 1.4;
+    font-weight: 500;
+    opacity: 0.85;
 } 
