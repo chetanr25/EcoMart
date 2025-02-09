@@ -1,120 +1,141 @@
-# Ecomart - Chrome Extension for Sustainable Shopping
+# Ecomart - Making Sustainable Shopping Simple
 
-## Team: Greenfinch
+ <div style="float: right;" align="center">
+    <img width="155" alt="ecomart_plain" src="https://github.com/user-attachments/assets/1a9f502e-3a02-4e6a-8123-b58b8db2bcd7" />
+<br /> 
+    <img width="155" alt="Icon" src="https://github.com/user-attachments/assets/c7ff7e6e-7f64-4d5f-ac54-f8b148e7a904" />
+  </div>
+</div>
 
-We are building **Ecomart**, a Chrome extension that helps users make more eco-friendly purchasing decisions. The extension assesses the sustainability of products on e-commerce platforms (e.g., Amazon) and provides alternatives from eco-friendly brands. 
+## 🌿 About Ecomart
 
----
+**Ecomart** is a Chrome extension that revolutionizes online shopping by providing real-time sustainability insights. When browsing products on major e-commerce platforms like Amazon, our extension analyzes product sustainability and suggests eco-friendly alternatives, making it easier than ever to shop responsibly.
 
-## 🚀 Overview
+## ✨ Key Features
 
-Ecomart aims to bridge the gap between consumer awareness and sustainable shopping by providing real-time sustainability insights on the products users view online. When users click on a product, the extension will pop up with details on the environmental impact, including carbon footprint, water usage, and recyclability. Additionally, Ecomart suggests eco-friendly alternatives from registered brands.
-
----
-
-## 🛠️ Technical Details
-
-**Tech Stack:**
-- **Frontend**: Chrome Extension (Built using **Next.js** and **JavaScript**)
-- **Backend**: **Firebase** (for user and company data)
-- **API**: **Gemini API** (for sustainability data)
-
-**Features:**
-- **Sustainability Data**: Carbon footprint, water usage, manufacturing impact, recyclability, certifications, etc.
-- **Eco-friendly Alternatives**: Redirects to alternative products from eco-friendly brands.
-- **Commission System**: Ecomart earns a commission based on traffic driven to the alternative products.
+- 🔍 **Real-Time Analysis**: Instant sustainability insights while you shop
+- 🌱 **Eco Alternatives**: Curated suggestions from verified sustainable brands
+- 📊 **Sustainability Score**: Comprehensive rating based on multiple environmental factors
+- ♻️ **Impact Tracking**: Monitor your environmental impact over time
 
 ---
 
-## 🌍 Key Parameters for Sustainability Score
+## 📊 Sustainability Metrics
 
-The sustainability score is calculated using weighted parameters that consider the environmental impact of each product. These parameters are:
+We have conducted extensive research and developed a **comprehensive scoring system** to evaluate products across key environmental factors. Each metric is assigned a specific weight based on its impact, helping users make more eco-conscious purchasing decisions.
 
-1. **🌱 Overall Sustainability Score**: Quick summary rating (0-100%) for decision-making.
-2. **🌍 Carbon Footprint**: CO₂ emissions during production.
-3. **🚰 Water Usage**: Liters of water consumed for production.
-4. **🏭 Manufacturing Impact**: Pollution, deforestation, or waste generated.
-5. **🔄 Recyclability**: Percentage of product that can be recycled.
-6. **✅ Eco Certifications**: Fair Trade, FSC, Energy Star, etc.
-7. **🛢️ Harmful Chemicals Used**: Toxic materials like microplastics and heavy metals.
-8. **🌾 Material Composition**: Organic, recycled, synthetic materials used.
-9. **🔥 Biodegradability**: Time taken to decompose.
-10. **✈️ Shipping Impact**: Distance traveled & CO₂ emissions from transportation.
-
-### Example Calculation for a Product
-
-For example, a product like an **Eco-friendly Bluetooth Speaker** will have a sustainability score calculated based on the weighted sum of individual scores for each parameter.
-
-**Final Sustainability Score Example**: 78.75%
-
----
-
-## 📋 Product Registration for Brands
-
-Eco-friendly brands can register their products with Ecomart to be included in the extension's alternative suggestions. The registration process involves:
-
-- **Product Name**: Clear, descriptive name.
-- **Product Category**: Type of product (e.g., Home Decor, Clothing).
-- **Product Description**: Key features of the product.
-- **Brand Name**: Manufacturer or company name.
-- **Product Image**: High-quality image.
-- **Price**: Price of the product.
-- **Product Link**: Link to the product on the e-commerce platform.
-
-### Required Certifications (Compulsory)
-- **B Corp Certification**
-- **Fair Trade Certification**
-- **Energy Star**
-- **Carbon Neutral Certification**
-- **Organic Certification (e.g., USDA Organic)**
-
-### Optional Certifications
-- **Cradle to Cradle**
-- **Forest Stewardship Council (FSC)**
-- **Recycled Content Certifications**
+| Metric| Description| Weight |
+|-----|---------|------|
+| Carbon Footprint| CO₂ emissions during production       | 20%     |
+| Eco Certifications| Verified eco-credentials              | 20%    |
+| Energy Efficiency| Energy consumption during lifecycle   | 15%    |
+| Recyclability| Potential for recycling               | 15%    |
+| Water Usage| Production water consumption          | 10%    |
+| Biodegradability| Breakdown without harming the environment | 20% |
+| Toxic Materials| Presence of harmful substances        | 20%    |
+| Lifespan| Product durability                    | 10%    |
+| Repairability| Ease of repair and maintenance        | 10%    |
+| Packaging Waste| Amount of waste generated from packaging | 10% |
+| Transport Distance| Shipping distance impact              | 10%    |
+| Resource Efficiency| Efficient use of resources            | 10% |
+| Chemical Use| Harmful chemicals during production   | 10%    |
+| Renewable Content| Use of renewable materials            | 30%    |
+| Working Conditions| Ethical treatment of workers          | 10%    |
+| VOC Emissions| Volatile organic compounds emissions  | 10%    |
 
 ---
 
-## 🧑‍💼 Admin Approval Process
+## 🚀 Getting Started
 
-Admin review involves verifying the following:
+### Installation
 
-1. **Product Information**: Ensure accurate and eco-friendly attributes.
-2. **Certifications**: Validate certifications like B Corp and Fair Trade.
-3. **Tags**: Ensure tags such as “biodegradable” or “energy-efficient” match the product claims.
-4. **Approval/Rejection**: If everything checks out, the product is approved for listing; otherwise, it is rejected with feedback.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/chetanr25/EcoMart.git
+   cd EcoMart
+   ```
 
----
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## 🔧 Future Scope
+3. Build the extension:
+   ```bash
+   npm run build
+   ```
+   > After running this, an  <u>out</u>  directory will be created in the project’s root directory containing the build files.
 
-### For Clients:
-- **Automated Data Input**: AI-driven suggestions for faster and more accurate registration.
-- **Real-Time Certification Validation**: Integrate APIs for instant certification verification.
-- **User-Friendly Interface**: Dynamic dashboards and real-time updates.
-
-### For Admins:
-- **Automated Verification**: AI tools for certifying products and eco-impact claims.
-- **Enhanced Admin Dashboard**: Advanced analytics and alerts for certification expirations.
-- **Ongoing Monitoring**: Periodic checks to ensure products remain eco-friendly and certification status is updated.
-
----
-
-## 🎯 Goal
-
-Our goal is to make it easy for consumers to make sustainable choices and empower eco-friendly brands by providing them with visibility to a wider audience.
-
-By building a Chrome extension that seamlessly integrates with e-commerce platforms and leveraging eco-certification data, we are committed to creating a more sustainable online shopping experience.
+4. Load in Chrome:
+	  - Open Chrome and go to `chrome://extensions`
+	  - Enable `"Developer mode"`
+	  - Click `"Load unpacked"`
+	  - Select the project's `out` directory
+	  - Try it out on E-commerce 
 
 ---
 
-## 📝 How to Run the Project
+### Running the Website
 
-1. How to run the extension
-- npm run build
-- Enable Developer Mode
-- Load the Unpacked Extension
--Test the Extension
+```bash
+npm run dev
+```
+Visit `http://localhost:3000`
 
-2. How to run website
-- npm run dev
+## 🌍 How It Works
+
+1. **Product Detection**: Automatically identifies products while shopping
+2. **Data Analysis**: Processes product information through our sustainability algorithm
+3. **Score Generation**: Creates a comprehensive eco-score
+4. **Alternative Suggestions**: Presents sustainable alternatives from verified brands
+
+---
+
+## 🤝 For Eco-Friendly Brands
+
+Join our platform to showcase your sustainable products:
+
+### Requirements:
+- Valid sustainability certifications
+- Transparent supply chain documentation
+- Verified eco-friendly practices
+
+[Apply to Register Your Brand →](https://ecomart-dusky.vercel.app)
+
+---
+
+## 🛠️ Technology Stack
+
+- **Frontend**: Chrome Extension (Next.js, JavaScript)
+- **Backend**: Firebase
+- **AI Integration**: Gemini API
+---
+
+## 📈 Impact Dashboard
+
+Track your sustainable shopping impact:
+- 🌱 Products switched to eco-friendly alternatives
+- 💧 Water saved through conscious choices
+- 🌡️ Carbon emissions reduced
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+<p align="center">
+Made with 💚 for a <strong>sustainable</strong> future
+</p>
