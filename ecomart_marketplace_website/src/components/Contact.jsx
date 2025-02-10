@@ -8,14 +8,49 @@ export default function Contact() {
     message: ''
   });
 
+  const [showPopup, setShowPopup] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+    // Show popup and reset form
+    setShowPopup(true);
+    setFormData({
+      name: '',
+      email: '',
+      message: ''
+    });
+    // Hide popup after 3 seconds
+    setTimeout(() => {
+      setShowPopup(false);
+    }, 3000);
   };
 
   return (
-    <div className="bg-gradient-to-br from-green-50 to-green-100 py-16">
+    <div className="bg-gradient-to-br from-green-50 to-green-100 py-16" id="contact">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Success Popup */}
+        {showPopup && (
+          <div className="fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-fade-in-down">
+            <div className="flex items-center space-x-2">
+              <svg 
+                className="h-6 w-6" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              <span>Message sent successfully!</span>
+            </div>
+          </div>
+        )}
+
         <div className="text-center">
           <h2 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
             Contact Us
