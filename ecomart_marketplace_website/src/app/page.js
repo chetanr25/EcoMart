@@ -208,7 +208,6 @@ export default function Home() {
             </div>
             <div className="lg:block lg:w-1/2 flex items-center justify-center">
               <img
-                // src="/images/image.png"
                 src="/icons/favicon-32x32.png"
                 alt="Eco-Friendly"
                 className="w-4/5 h-[450px] object-contain"
